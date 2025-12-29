@@ -32,7 +32,7 @@ type CreditTypes = {
   }[]
 }
 
-type MovieCrediType = {
+type MovieCreditType = {
   id: number
   cast: {
     adult: false
@@ -76,17 +76,19 @@ type MovieCrediType = {
 
 // Fetch movie credits based on movie ID
 const getCredits = createServerFn({ method: "GET" })
-  .inputValidator((id: number) => id)
+  .inputValidator((movieId: number) => movieId)
   .handler(async ({ data: movieId }) => {
-    const credits = await fetchMovieDb<CreditTypes>(`/${movieId}/credits`)
+    const credits = await fetchMovieDb<CreditTypes>(
+      `/movie/${movieId}/credits?language=en-US`
+    )
     return credits
   })
 
 // Fetch movie credits based on the person ID
 const getMovieCredits = createServerFn({ method: "GET" })
-  .inputValidator((id: number) => id)
+  .inputValidator((personId: number) => personId)
   .handler(async ({ data: personId }) => {
-    const credits = await fetchMovieDb<MovieCrediType>(
+    const credits = await fetchMovieDb<MovieCreditType>(
       `/person/${personId}/movie_credits?language=en-US`
     )
     return credits

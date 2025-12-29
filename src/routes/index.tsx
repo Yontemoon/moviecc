@@ -1,12 +1,10 @@
-import React from "react"
-import { createFileRoute } from "@tanstack/react-router"
+import { createFileRoute, Link } from "@tanstack/react-router"
 import { getMovie } from "~/utils/movies"
 
 export const Route = createFileRoute("/")({
   component: Home,
   loader: async () => {
-    const randomNum = Math.floor(Math.random() * 100_000)
-    const randomMovie = await getMovie({ data: randomNum })
+    const randomMovie = await getMovie({ data: 76341 })
     return randomMovie
   },
 })
@@ -16,7 +14,14 @@ function Home() {
 
   return (
     <div className="p-2">
-      <h3>{JSON.stringify(movie)}</h3>
+      <Link
+        to="/game/movie/$movieId"
+        params={{
+          movieId: movie.id.toString(),
+        }}
+      >
+        <h3>{movie.title}</h3>
+      </Link>
     </div>
   )
 }
