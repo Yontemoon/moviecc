@@ -76,20 +76,18 @@ type MovieCreditType = {
 
 // Fetch movie credits based on movie ID
 const getCredits = createServerFn({ method: "GET" })
-  .inputValidator((movieId: number) => movieId)
+  .inputValidator((movieId: string) => movieId)
   .handler(async ({ data: movieId }) => {
-    const credits = await fetchMovieDb<CreditTypes>(
-      `/movie/${movieId}/credits?language=en-US`
-    )
+    const credits = await fetchMovieDb<CreditTypes>(`/movie/${movieId}/credits`)
     return credits
   })
 
 // Fetch movie credits based on the person ID
 const getMovieCredits = createServerFn({ method: "GET" })
-  .inputValidator((personId: number) => personId)
+  .inputValidator((personId: string) => personId)
   .handler(async ({ data: personId }) => {
     const credits = await fetchMovieDb<MovieCreditType>(
-      `/person/${personId}/movie_credits?language=en-US`
+      `/person/${personId}/movie_credits`
     )
     return credits
   })

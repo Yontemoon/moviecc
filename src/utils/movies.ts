@@ -1,4 +1,5 @@
 import { createServerFn } from "@tanstack/react-start"
+import { fetchMovieDb } from "./fetch"
 
 type MovieType = {
   adult: false
@@ -45,24 +46,9 @@ type MovieType = {
 }
 
 const getMovie = createServerFn({ method: "GET" })
-  .inputValidator((id: number) => id)
+  .inputValidator((id: string) => id)
   .handler(async ({ data: movieId }) => {
-    const movieResponse = await fetch(
-      `https://api.themoviedb.org/3/movie/${movieId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.THE_MOVIE_DB_API_KEY}`,
-        },
-      }
-    )
-    if (!movieResponse.ok) {
-      console.error(
-        `Failed to fetch movie with id ${movieId}: ${movieResponse.statusText}`
-      )
-      throw new Error(`Failed to fetch movie with id ${movieId}`)
-    }
-
-    const movieData: MovieType = await movieResponse.json()
+    const movieData = await fetchMovieDb<MovieType>(`/movie/${movieId}`)
     return movieData
   })
 

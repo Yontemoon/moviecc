@@ -1,44 +1,64 @@
 import { createFileRoute, Link } from "@tanstack/react-router"
+import { useGame } from "~/store/game"
 import { getCredits, getMovieCredits } from "~/utils/credits"
+import { getPerson } from "~/utils/person"
 
 export const Route = createFileRoute("/game/person/$personId")({
   component: RouteComponent,
+  headers: () => ({
+    // Cache at CDN for 1 hour, allow stale content for up to 1 day
+    "Cache-Control":
+      "public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400",
+  }),
   loader: async ({ params }) => {
-    const personId = Number(params.personId)
+    const personId = params.personId
 
-    const credits = await getMovieCredits({ data: personId })
-    return credits
+    const data = await Promise.all([
+      getMovieCredits({ data: personId }),
+      getPerson({ data: personId }),
+    ])
+
+    return data
   },
 })
 
 function RouteComponent() {
   const data = Route.useLoaderData()
+  const { addToHistory, history } = useGame()
+
   return (
     <div>
-      <h1>{data.id}</h1>
+      <h1>{data[1].name}</h1>
       <div id="cast">
-        {data.cast.map((movie) => {
+        {data[0].cast.map((movie) => {
           return (
-            <div key={movie.id}>
+            <div key={`cast-${movie.id}`}>
               <p>
                 <Link
+                  onClick={() => {
+                    addToHistory({
+                      type: "movie",
+                      id: movie.id,
+                      number: history.length + 1,
+                    })
+                  }}
                   to="/game/movie/$movieId"
                   params={{
                     movieId: movie.id.toString(),
                   }}
                 >
-                  {movie.title}
+                  {movie.title} ---{" "}
                 </Link>
-                as {movie.character}
+                {movie.character}
               </p>
             </div>
           )
         })}
       </div>
       <div id="crew">
-        {data.crew.map((movie) => {
+        {data[0].crew.map((movie) => {
           return (
-            <div key={movie.id}>
+            <div key={`crew-${movie.id}-${movie.job}`}>
               <p>
                 <Link
                   to="/game/movie/$movieId"
