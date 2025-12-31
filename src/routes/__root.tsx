@@ -112,7 +112,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           >
             Home
           </Link>{" "}
-          <div className="ml-auto">
+          {/* <div className="ml-auto">
             {user ? (
               <>
                 <span className="mr-2">{user.email}</span>
@@ -121,7 +121,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             ) : (
               <Link to="/login">Login</Link>
             )}
-          </div>
+          </div> */}
         </div>
         <hr />
         {children}

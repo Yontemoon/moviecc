@@ -20,3 +20,6 @@ yarn.lock
 /playwright/.cache/
 
 /src/scripts
+
+/dist/
+/dist/server/server.js
