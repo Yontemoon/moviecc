@@ -53,3 +53,4 @@ const getMovie = createServerFn({ method: "GET" })
   })
 
 export { getMovie }
+export type { MovieType }

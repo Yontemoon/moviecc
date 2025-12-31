@@ -13,14 +13,10 @@ import { Route as SignupRouteImport } from './routes/signup'
 import { Route as LogoutRouteImport } from './routes/logout'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as GameRouteImport } from './routes/game'
-import { Route as AuthedRouteImport } from './routes/_authed'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as GameIndexRouteImport } from './routes/game.index'
-import { Route as AuthedPostsRouteImport } from './routes/_authed/posts'
-import { Route as AuthedPostsIndexRouteImport } from './routes/_authed/posts.index'
 import { Route as GamePersonPersonIdRouteImport } from './routes/game.person.$personId'
 import { Route as GameMovieMovieIdRouteImport } from './routes/game.movie.$movieId'
-import { Route as AuthedPostsPostIdRouteImport } from './routes/_authed/posts.$postId'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
@@ -42,10 +38,6 @@ const GameRoute = GameRouteImport.update({
   path: '/game',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthedRoute = AuthedRouteImport.update({
-  id: '/_authed',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -55,16 +47,6 @@ const GameIndexRoute = GameIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => GameRoute,
-} as any)
-const AuthedPostsRoute = AuthedPostsRouteImport.update({
-  id: '/posts',
-  path: '/posts',
-  getParentRoute: () => AuthedRoute,
-} as any)
-const AuthedPostsIndexRoute = AuthedPostsIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AuthedPostsRoute,
 } as any)
 const GamePersonPersonIdRoute = GamePersonPersonIdRouteImport.update({
   id: '/person/$personId',
@@ -76,11 +58,6 @@ const GameMovieMovieIdRoute = GameMovieMovieIdRouteImport.update({
   path: '/movie/$movieId',
   getParentRoute: () => GameRoute,
 } as any)
-const AuthedPostsPostIdRoute = AuthedPostsPostIdRouteImport.update({
-  id: '/$postId',
-  path: '/$postId',
-  getParentRoute: () => AuthedPostsRoute,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -88,12 +65,9 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
   '/signup': typeof SignupRoute
-  '/posts': typeof AuthedPostsRouteWithChildren
   '/game/': typeof GameIndexRoute
-  '/posts/$postId': typeof AuthedPostsPostIdRoute
   '/game/movie/$movieId': typeof GameMovieMovieIdRoute
   '/game/person/$personId': typeof GamePersonPersonIdRoute
-  '/posts/': typeof AuthedPostsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -101,25 +75,19 @@ export interface FileRoutesByTo {
   '/logout': typeof LogoutRoute
   '/signup': typeof SignupRoute
   '/game': typeof GameIndexRoute
-  '/posts/$postId': typeof AuthedPostsPostIdRoute
   '/game/movie/$movieId': typeof GameMovieMovieIdRoute
   '/game/person/$personId': typeof GamePersonPersonIdRoute
-  '/posts': typeof AuthedPostsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/_authed': typeof AuthedRouteWithChildren
   '/game': typeof GameRouteWithChildren
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
   '/signup': typeof SignupRoute
-  '/_authed/posts': typeof AuthedPostsRouteWithChildren
   '/game/': typeof GameIndexRoute
-  '/_authed/posts/$postId': typeof AuthedPostsPostIdRoute
   '/game/movie/$movieId': typeof GameMovieMovieIdRoute
   '/game/person/$personId': typeof GamePersonPersonIdRoute
-  '/_authed/posts/': typeof AuthedPostsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -129,12 +97,9 @@ export interface FileRouteTypes {
     | '/login'
     | '/logout'
     | '/signup'
-    | '/posts'
     | '/game/'
-    | '/posts/$postId'
     | '/game/movie/$movieId'
     | '/game/person/$personId'
-    | '/posts/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -142,29 +107,22 @@ export interface FileRouteTypes {
     | '/logout'
     | '/signup'
     | '/game'
-    | '/posts/$postId'
     | '/game/movie/$movieId'
     | '/game/person/$personId'
-    | '/posts'
   id:
     | '__root__'
     | '/'
-    | '/_authed'
     | '/game'
     | '/login'
     | '/logout'
     | '/signup'
-    | '/_authed/posts'
     | '/game/'
-    | '/_authed/posts/$postId'
     | '/game/movie/$movieId'
     | '/game/person/$personId'
-    | '/_authed/posts/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AuthedRoute: typeof AuthedRouteWithChildren
   GameRoute: typeof GameRouteWithChildren
   LoginRoute: typeof LoginRoute
   LogoutRoute: typeof LogoutRoute
@@ -201,13 +159,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GameRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authed': {
-      id: '/_authed'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof AuthedRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
@@ -221,20 +172,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/game/'
       preLoaderRoute: typeof GameIndexRouteImport
       parentRoute: typeof GameRoute
-    }
-    '/_authed/posts': {
-      id: '/_authed/posts'
-      path: '/posts'
-      fullPath: '/posts'
-      preLoaderRoute: typeof AuthedPostsRouteImport
-      parentRoute: typeof AuthedRoute
-    }
-    '/_authed/posts/': {
-      id: '/_authed/posts/'
-      path: '/'
-      fullPath: '/posts/'
-      preLoaderRoute: typeof AuthedPostsIndexRouteImport
-      parentRoute: typeof AuthedPostsRoute
     }
     '/game/person/$personId': {
       id: '/game/person/$personId'
@@ -250,40 +187,8 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GameMovieMovieIdRouteImport
       parentRoute: typeof GameRoute
     }
-    '/_authed/posts/$postId': {
-      id: '/_authed/posts/$postId'
-      path: '/$postId'
-      fullPath: '/posts/$postId'
-      preLoaderRoute: typeof AuthedPostsPostIdRouteImport
-      parentRoute: typeof AuthedPostsRoute
-    }
   }
 }
-
-interface AuthedPostsRouteChildren {
-  AuthedPostsPostIdRoute: typeof AuthedPostsPostIdRoute
-  AuthedPostsIndexRoute: typeof AuthedPostsIndexRoute
-}
-
-const AuthedPostsRouteChildren: AuthedPostsRouteChildren = {
-  AuthedPostsPostIdRoute: AuthedPostsPostIdRoute,
-  AuthedPostsIndexRoute: AuthedPostsIndexRoute,
-}
-
-const AuthedPostsRouteWithChildren = AuthedPostsRoute._addFileChildren(
-  AuthedPostsRouteChildren,
-)
-
-interface AuthedRouteChildren {
-  AuthedPostsRoute: typeof AuthedPostsRouteWithChildren
-}
-
-const AuthedRouteChildren: AuthedRouteChildren = {
-  AuthedPostsRoute: AuthedPostsRouteWithChildren,
-}
-
-const AuthedRouteWithChildren =
-  AuthedRoute._addFileChildren(AuthedRouteChildren)
 
 interface GameRouteChildren {
   GameIndexRoute: typeof GameIndexRoute
@@ -301,7 +206,6 @@ const GameRouteWithChildren = GameRoute._addFileChildren(GameRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AuthedRoute: AuthedRouteWithChildren,
   GameRoute: GameRouteWithChildren,
   LoginRoute: LoginRoute,
   LogoutRoute: LogoutRoute,

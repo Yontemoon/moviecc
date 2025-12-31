@@ -26,3 +26,4 @@ const getPerson = createServerFn({ method: "GET" })
   })
 
 export { getPerson }
+export type { PersonType }
